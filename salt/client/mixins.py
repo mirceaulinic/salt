@@ -259,7 +259,7 @@ class SyncClientMixin(object):
         data = {'fun': '{0}.{1}'.format(self.client, fun),
                 'jid': jid,
                 'user': low.get('__user__', 'UNKNOWN'),
-               }
+                }
 
         event = salt.utils.event.get_event(
                 'master',
