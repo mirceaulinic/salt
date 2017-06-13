@@ -2,7 +2,7 @@
 '''
 Minion data cache plugin for MySQL database.
 
-.. versionadded:: develop
+.. versionadded:: Oxygen
 
 It is up to the system administrator to set up and configure the MySQL
 infrastructure. All is needed for this plugin is a working MySQL server.
