@@ -41,24 +41,26 @@ class RunnerClient(mixins.SyncClientMixin, mixins.AsyncClientMixin, object):
     client = 'runner'
     tag_prefix = 'run'
 
-    def __init__(self, opts):
+    def __init__(self, opts, minion_mods=None, utils=None):
         self.opts = opts
         self.context = {}
+        self.utils = utils
+        self.minion_mods = minion_mods
 
     @property
     def functions(self):
         if not hasattr(self, '_functions'):
-            if not hasattr(self, 'utils'):
+            if not self.utils:
                 self.utils = salt.loader.utils(self.opts)
             # Must be self.functions for mixin to work correctly :-/
             try:
                 self._functions = salt.loader.runner(
-                    self.opts, utils=self.utils, context=self.context)
+                    self.opts, functions=self.minion_mods, utils=self.utils, context=self.context)
             except AttributeError:
                 # Just in case self.utils is still not present (perhaps due to
                 # problems with the loader), load the runner funcs without them
                 self._functions = salt.loader.runner(
-                    self.opts, context=self.context)
+                    self.opts, functions=self.minion_mods, context=self.context)
 
         return self._functions
 
@@ -160,8 +162,8 @@ class Runner(RunnerClient):
     '''
     Execute the salt runner interface
     '''
-    def __init__(self, opts):
-        super(Runner, self).__init__(opts)
+    def __init__(self, opts, utils=None, minion_mods=None):
+        super(Runner, self).__init__(opts, utils=utils, minion_mods=minion_mods)
         self.returners = salt.loader.returners(opts, self.functions)
         self.outputters = salt.loader.outputters(opts)
 

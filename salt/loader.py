@@ -915,7 +915,7 @@ def call(fun, **kwargs):
     return funcs[fun](*args)
 
 
-def runner(opts, utils=None, context=None, whitelist=None):
+def runner(opts, functions=None, utils=None, context=None, whitelist=None, proxy=None):
     '''
     Directly call a function inside a loader directory
     '''
@@ -927,11 +927,18 @@ def runner(opts, utils=None, context=None, whitelist=None):
         _module_dirs(opts, 'runners', 'runner', ext_type_dirs='runner_dirs'),
         opts,
         tag='runners',
-        pack={'__utils__': utils, '__context__': context},
+        pack={'__utils__': utils, '__context__': context, '__proxy__': proxy},
         whitelist=whitelist,
     )
-    # TODO: change from __salt__ to something else, we overload __salt__ too much
-    ret.pack['__salt__'] = ret
+    if functions is None and opts['runner_load_minion_mods']:
+        log.error('Loading functions')
+        functions = minion_mods(opts,
+                                utils=utils,
+                                context=context,
+                                whitelist=whitelist,
+                                proxy=proxy)
+    ret.pack['__runner__'] = ret
+    ret.pack['__salt__'] = functions
     return ret
 
 

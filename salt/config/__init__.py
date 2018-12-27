@@ -1211,6 +1211,8 @@ VALID_OPTS = {
 
     # Disable requisites during State runs
     'disabled_requisites': (six.string_types, list),
+
+    'runner_load_minion_mods': bool,
 }
 
 # default configurations
@@ -1843,6 +1845,7 @@ DEFAULT_MASTER_OPTS = {
     'auth_events': True,
     'minion_data_cache_events': True,
     'enable_ssh_minions': False,
+    'runner_load_minion_mods': False
 }
 
 
