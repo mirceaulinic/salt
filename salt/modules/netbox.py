@@ -31,7 +31,11 @@ from salt.exceptions import CommandExecutionError
 
 try:
     import pynetbox
-    from pynetbox.lib import RequestError
+
+    try:
+        from pynetbox.lib import RequestError
+    except ImportError:
+        from pynetbox.core.query import RequestError
     HAS_PYNETBOX = True
 except ImportError:
     HAS_PYNETBOX = False
